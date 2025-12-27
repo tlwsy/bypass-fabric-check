@@ -1,6 +1,7 @@
 # Bypass Fabric Check
 
 ![License](https://img.shields.io/badge/License-GPLv3-blue.svg) ![Fabric](https://img.shields.io/badge/Loader-Fabric-green) ![MC](https://img.shields.io/badge/Minecraft-1.21%2B-lightgrey)
+
 [English](#english) | [简体中文](#chinese)
 
 ---
