@@ -10,7 +10,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Queue;
 
 @Mixin(ServerCommonNetworkHandler.class)
 public abstract class BypassFabricCheckMixin {
@@ -31,49 +33,68 @@ public abstract class BypassFabricCheckMixin {
 		if (message.contains("Fabric") && (message.contains("requires") || message.contains("install"))) {
 
 			BYPASS_LOGGER.info("[BypassCheck] 拦截到 Fabric 协议检查: {}", message);
-			BYPASS_LOGGER.warn("[BypassCheck] 正在尝试通过反射强制进入游戏...");
 
 			// 3. 阻止断开
 			ci.cancel();
 
-			// 4. 使用反射 (Reflection) 暴力调用切换方法
 			try {
-				// 获取当前类 (ServerConfigurationNetworkHandler)
+				// 4. 【核心修复】 纯反射清理任务 (不引用任何 Minecraft 类)
 				Class<?> clazz = this.getClass();
+
+				for (Field field : clazz.getDeclaredFields()) {
+					field.setAccessible(true);
+
+					// 获取字段类型的名称
+					String typeName = field.getType().getSimpleName();
+					Object value = field.get(this);
+
+					// A. 清理队列 (Queue) - 存放待办任务的地方
+					// 只要字段类型实现了 Queue 接口，或者名字里带 Queue，就清空它
+					if (Queue.class.isAssignableFrom(field.getType())) {
+						if (value != null) {
+							((Queue<?>) value).clear();
+							BYPASS_LOGGER.info("[BypassCheck] 已清空队列字段: {}", field.getName());
+						}
+					}
+
+					// B. 清理当前任务 (ConfigurationTask)
+					// 因为编译器找不到 ConfigurationTask 类，我们检查字段类型的名字是否包含 "Task"
+					// 并且确保该字段当前有值 (value != null)
+					if (value != null && (typeName.contains("ConfigurationTask") || typeName.contains("Task"))) {
+						field.set(this, null);
+						BYPASS_LOGGER.info("[BypassCheck] 已强制移除卡住的任务: {} (类型: {})", field.getName(), typeName);
+					}
+				}
+
+				// 5. 强制进入游戏
+				BYPASS_LOGGER.warn("[BypassCheck] 正在尝试强制进入游戏...");
 				Method method = null;
 
-				// 尝试查找方法：为了兼容性，我们尝试多种可能的名称
-				// 1.21.x 的核心方法通常没有参数
 				String[] possibleNames = {
-						"switchToPlay",     // Yarn 映射名 (开发环境)
-						"method_52409",     // Intermediary 映射名 (Fabric 生产环境核心)
-						"startPlay",        // Mojang 官方映射名
-						"finishConfiguration" // 备用名称
+						"switchToPlay",
+						"method_52409",
+						"startPlay",
+						"finishConfiguration"
 				};
 
 				for (String name : possibleNames) {
 					try {
-						// 尝试查找该名称的方法，且没有参数
 						method = clazz.getDeclaredMethod(name);
-						BYPASS_LOGGER.info("[BypassCheck] 找到目标方法: {}", name);
-						break; // 找到了就跳出循环
-					} catch (NoSuchMethodException ignored) {
-						// 没找到就继续试下一个名字
-					}
+						BYPASS_LOGGER.info("[BypassCheck] 找到切换方法: {}", name);
+						break;
+					} catch (NoSuchMethodException ignored) {}
 				}
 
 				if (method != null) {
-					// 暴力赋予访问权限（即使是 private/protected 也能调）
 					method.setAccessible(true);
-					// 执行方法
 					method.invoke(this);
 					BYPASS_LOGGER.info("[BypassCheck] 成功跳转至 PLAY 阶段！");
 				} else {
-					BYPASS_LOGGER.error("[BypassCheck] 致命错误：无法通过反射找到 switchToPlay 或 method_52409 方法！");
+					BYPASS_LOGGER.error("[BypassCheck] 致命错误：无法通过反射找到切换方法！");
 				}
 
 			} catch (Exception e) {
-				BYPASS_LOGGER.error("[BypassCheck] 反射调用失败: ", e);
+				BYPASS_LOGGER.error("[BypassCheck] 绕过逻辑发生异常: ", e);
 			}
 		}
 	}

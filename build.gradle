@@ -64,6 +64,3 @@ publishing {
 	}
 }
 
-loom {
-	accessWidenerPath = file("src/main/resources/bypass-fabric-check.accesswidener")
-}
