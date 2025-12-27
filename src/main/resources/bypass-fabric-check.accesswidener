@@ -1,0 +1,3 @@
+accessWidener v1 named
+# 允许访问切换到游玩阶段的方法
+accessible method net/minecraft/server/network/ServerConfigurationNetworkHandler switchToPlay ()V
