@@ -1,6 +1,6 @@
 # Bypass Fabric Check
 
-![License](https://img.shields.io/badge/license-MIT-blue) ![Fabric](https://img.shields.io/badge/Loader-Fabric-green) ![MC](https://img.shields.io/badge/Minecraft-1.21%2B-lightgrey)
+![License](https://img.shields.io/badge/License-GPLv3-blue.svg) ![Fabric](https://img.shields.io/badge/Loader-Fabric-green) ![MC](https://img.shields.io/badge/Minecraft-1.21%2B-lightgrey)
 
 ## 简介 / Introduction
 这是一个简单的 Minecraft Fabric 模组，旨在解决 **1.21+** 版本中，原版客户端 (Vanilla Client) 无法加入安装了 Fabric API 的局域网 (LAN) 或服务端的问题。
