@@ -8,7 +8,8 @@
 		"tlwsy"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
+		"homepage": "https://modrinth.com/mod/bypass-fabric-check",
+		"issues": "https://github.com/tlwsy/bypass-fabric-check/issues",
 		"sources": "https://github.com/tlwsy/bypass-fabric-check"
 	},
 	"license": "GPL-3.0-or-later",
