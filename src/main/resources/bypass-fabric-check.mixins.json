@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "name.modid.mixin",
+  "package": "me.tlwsy.bypass.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "BypassFabricCheckMixin"
