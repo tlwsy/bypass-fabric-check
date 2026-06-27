@@ -1,7 +1,6 @@
-# Automatically build the project and run any configured tests for every push
-# and submitted pull request. This can help catch issues that only occur on
-# certain platforms or Java versions, and provides a first line of defence
-# against bad commits.
+# Build the Fabric mod on every push and pull request, then publish the
+# remapped mod jar as a GitHub Actions artifact so it can be downloaded and
+# dropped directly into a Minecraft mods folder.
 
 name: build
 on: [pull_request, push]
@@ -12,19 +11,28 @@ jobs:
     steps:
       - name: checkout repository
         uses: actions/checkout@v4
+
       - name: validate gradle wrapper
         uses: gradle/actions/wrapper-validation@v4
+
       - name: setup jdk
         uses: actions/setup-java@v4
         with:
           java-version: '25'
           distribution: 'microsoft'
+
       - name: make gradle wrapper executable
         run: chmod +x ./gradlew
-      - name: build
+
+      - name: build remapped mod jar
         run: ./gradlew build
-      - name: capture build artifacts
+
+      - name: upload playable mod jar
         uses: actions/upload-artifact@v4
         with:
-          name: Artifacts
-          path: build/libs/
+          name: bypass-fabric-check-mod-jar
+          if-no-files-found: error
+          path: |
+            build/libs/*.jar
+            !build/libs/*-dev.jar
+            !build/libs/*-sources.jar
