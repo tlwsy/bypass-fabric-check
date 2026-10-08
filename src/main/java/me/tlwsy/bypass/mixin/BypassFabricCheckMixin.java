@@ -1,12 +1,16 @@
 package me.tlwsy.bypass.mixin;
 
 import me.tlwsy.bypass.BypassFabricCheck;
+import me.tlwsy.bypass.BypassedConnection;
+import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.network.ServerCommonPacketListenerImpl;
 import net.minecraft.server.network.ServerConfigurationPacketListenerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,6 +21,10 @@ import java.lang.reflect.Method;
 
 @Mixin(ServerCommonPacketListenerImpl.class)
 public abstract class BypassFabricCheckMixin {
+
+    @Shadow
+    @Final
+    protected Connection connection;
 
     @Unique
     private static final Logger BYPASS_LOGGER = LoggerFactory.getLogger("BypassCheck");
@@ -30,7 +38,7 @@ public abstract class BypassFabricCheckMixin {
 
     @Inject(method = "disconnect(Lnet/minecraft/network/chat/Component;)V", at = @At("HEAD"), cancellable = true)
     private void interceptDisconnect(Component reason, CallbackInfo ci) {
-        if (!BypassFabricCheck.IS_ENABLED) return;
+        if (!BypassFabricCheck.CONFIG.get().bypassEnabled()) return;
 
         if (!((Object) this instanceof ServerConfigurationPacketListenerImpl handler)) return;
 
@@ -38,6 +46,7 @@ public abstract class BypassFabricCheckMixin {
         if (message.contains("Fabric") && (message.contains("requires") || message.contains("install"))) {
             BYPASS_LOGGER.warn("[BypassCheck] Intercepted Fabric handshake failure, attempting graceful bypass...");
 
+            ((BypassedConnection) connection).bypassFabricCheck$markRegistrySyncBypassed();
             ci.cancel();
             this.completeTaskAndProgress(handler);
         }

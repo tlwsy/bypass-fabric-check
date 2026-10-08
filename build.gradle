@@ -11,7 +11,10 @@ base {
 }
 
 repositories {
-	// Add repositories to retrieve artifacts from in here.
+	maven {
+		url = 'https://api.modrinth.com/maven'
+		content { includeGroup 'maven.modrinth' }
+	}
 }
 
 dependencies {
@@ -20,6 +23,21 @@ dependencies {
 	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+	compileOnly("maven.modrinth:modmenu:${project.modmenu_version}") {
+		transitive = false
+	}
+
+	testImplementation platform('org.junit:junit-bom:5.14.0')
+	testImplementation 'org.junit.jupiter:junit-jupiter'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+	useJUnitPlatform()
+	workingDir = layout.buildDirectory.dir('test-run').get().asFile
+	doFirst {
+		workingDir.mkdirs()
+	}
 }
 
 processResources {

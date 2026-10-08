@@ -18,6 +18,9 @@
 	"entrypoints": {
 		"main": [
 			"me.tlwsy.bypass.BypassFabricCheck"
+		],
+		"modmenu": [
+			"me.tlwsy.bypass.client.ModMenuIntegration"
 		]
 	},
 	"mixins": [
@@ -28,5 +31,8 @@
 		"minecraft": ">=26.1 <27.0",
 		"java": ">=25",
 		"fabric-api": "*"
+	},
+	"suggests": {
+		"modmenu": "*"
 	}
 }
