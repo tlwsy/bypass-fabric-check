@@ -3,7 +3,8 @@
   "package": "me.tlwsy.bypass.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
-    "BypassFabricCheckMixin"
+    "BypassFabricCheckMixin",
+    "ConnectionMixin"
   ],
   "injectors": {
     "defaultRequire": 1

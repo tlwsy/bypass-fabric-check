@@ -1,0 +1,14 @@
+{
+  "config.bypass-fabric-check.title": "Bypass Fabric Check",
+  "config.bypass-fabric-check.scope": "Applies to worlds hosted on this instance. Does not change remote servers.",
+  "config.bypass-fabric-check.bypass": "Bypass join checks",
+  "config.bypass-fabric-check.bypass.tooltip": "Allow clients without Fabric API to join.",
+  "config.bypass-fabric-check.effects": "Filter modded status effects",
+  "config.bypass-fabric-check.effects.tooltip": "Filter non-vanilla status effects sent to clients without mods to prevent disconnects caused by unknown effects.",
+  "config.bypass-fabric-check.search": "Search settings…",
+  "config.bypass-fabric-check.no_results": "No matching settings",
+  "config.bypass-fabric-check.reset": "Reset",
+  "config.bypass-fabric-check.reset.tooltip": "Restore %s to its default. Applied after saving.",
+  "config.bypass-fabric-check.save": "Done and exit",
+  "config.bypass-fabric-check.save_failed": "Could not save. Settings were not changed; check the log."
+}

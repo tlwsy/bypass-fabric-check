@@ -1,0 +1,14 @@
+{
+  "config.bypass-fabric-check.title": "Bypass Fabric Check 配置",
+  "config.bypass-fabric-check.scope": "仅影响本机开设的世界，不会修改所连接的远程服务器。",
+  "config.bypass-fabric-check.bypass": "绕过入服检查",
+  "config.bypass-fabric-check.bypass.tooltip": "允许未安装 Fabric API 的客户端加入。",
+  "config.bypass-fabric-check.effects": "过滤模组状态效果同步",
+  "config.bypass-fabric-check.effects.tooltip": "过滤向未安装模组的客户端同步的非原版状态效果，防止因未知效果断线。",
+  "config.bypass-fabric-check.search": "搜索设置…",
+  "config.bypass-fabric-check.no_results": "没有匹配的设置",
+  "config.bypass-fabric-check.reset": "重置",
+  "config.bypass-fabric-check.reset.tooltip": "将“%s”恢复为默认值，完成并退出后生效。",
+  "config.bypass-fabric-check.save": "完成并退出",
+  "config.bypass-fabric-check.save_failed": "保存失败，设置未更改，请查看日志。"
+}
